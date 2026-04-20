@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:opn_form/model/field_type.dart';
 import 'package:opn_form/model/form_field.dart';
 
@@ -34,6 +35,8 @@ enum LogicOperator {
   }
 }
 
+
+/// email, link, phoneNumber, textfeild
 enum StringOperator {
   equals(value: 'equals'),
   doesNotEqual(value: 'does_not_equal'),
@@ -41,12 +44,10 @@ enum StringOperator {
   isNotEmpty(value: 'is_not_empty'),
   contentLengthEquals(value: 'content_length_equals'),
   contentLengthDoesNotEqual(value: 'content_length_does_not_equal'),
+  contentLengthGreaterThan(value: 'content_length_greater_than'),
+  contentLengthGreaterThanOrEqualTo(value: 'content_length_greater_than_or_equal_to',),
   contentLengthLessThan(value: 'content_length_less_than'),
   contentLengthLessThanOrEqualTo(value: 'content_length_less_than_or_equal_to'),
-  contentLengthGreaterThan(value: 'content_length_greater_than'),
-  contentLengthGreaterThanOrEqualTo(
-    value: 'content_length_greater_than_or_equal_to',
-  ),
   contains(value: 'contains'),
   doesNotContains(value: 'does_not_contain'),
   startsWith(value: 'starts_with'),
@@ -59,7 +60,6 @@ enum StringOperator {
 
 enum DateOperator {
   equals(value: 'equals'),
-  doesNotEqual(value: 'does_not_equal'),
   isEmpty(value: 'is_empty'),
   isNotEmpty(value: 'is_not_empty'),
   before(value: 'before'),
@@ -71,7 +71,9 @@ enum DateOperator {
   pastYear(value: 'past_year'),
   nextWeek(value: 'next_week'),
   nextMonth(value: 'next_month'),
-  nextYear(value: 'next_year');
+  nextYear(value: 'next_year'),
+
+  doesNotEqual(value: 'does_not_equal');
 
   final String value;
 
@@ -120,12 +122,10 @@ enum NumberOperator {
   isNotEmpty(value: 'is_not_empty'),
   contentLengthEquals(value: 'content_length_equals'),
   contentLengthDoesNotEqual(value: 'content_length_does_not_equal'),
-  contentLengthLessThan(value: 'content_length_less_than'),
-  contentLengthLessThanOrEqualTo(value: 'content_length_less_than_or_equal_to'),
   contentLengthGreaterThan(value: 'content_length_greater_than'),
-  contentLengthGreaterThanOrEqualTo(
-    value: 'content_length_greater_than_or_equal_to',
-  );
+  contentLengthGreaterThanOrEqualTo(value: 'content_length_greater_than_or_equal_to',),
+  contentLengthLessThan(value: 'content_length_less_than'),
+  contentLengthLessThanOrEqualTo(value: 'content_length_less_than_or_equal_to');
 
   final String value;
 
@@ -141,13 +141,28 @@ enum FilesOperator {
   const FilesOperator({required this.value});
 }
 
-enum TextBlockOperator {
-  equals(value: 'equals'),
-  doesNotEqual(value: 'does_not_equal');
+enum ConditionActions {
+  hide("hide-block"),
+  required("require-answer"),
+  disabled("disable-block");
 
   final String value;
 
-  const TextBlockOperator({required this.value});
+  const ConditionActions(this.value);
+
+  factory ConditionActions.fromJson(String value) {
+    return ConditionActions.values.firstWhere(
+          (element) => element.value == value,
+      orElse: () => ConditionActions.disabled,
+    );
+  }
+}
+
+final class ConditionTree {
+  final ConditionNode node;
+  final ConditionActions action;
+
+  const ConditionTree({required this.action, required this.node});
 }
 
 sealed class ConditionNode {
@@ -156,6 +171,7 @@ sealed class ConditionNode {
   Set<String> get dependencies;
 
   bool evaluateNode(Map<String, dynamic> formData) {
+    debugPrint("evaludating tree");
     switch (this) {
       case ConditionLeaf leaf:
         return leaf.evaluate(formData[leaf.fieldId]);

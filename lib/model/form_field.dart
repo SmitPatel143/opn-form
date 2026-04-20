@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:opn_form/model/tree_node.dart';
 
 part 'form_field.g.dart';
 
@@ -7,10 +8,50 @@ class FormFieldDto {
   final String? id;
   final String? type;
   final String? name;
-  final bool? hidden;
+  @JsonKey(defaultValue: false)
+  final bool hidden;
+  @JsonKey(defaultValue: false)
+  final bool disabled;
+  @JsonKey(defaultValue: false)
+  final bool required;
   final Logic? logic;
+  final SelectConfig? select;
+  @JsonKey(name: 'multi_select')
+  final SelectConfig? multiSelect;
+  @JsonKey(name: 'help_position')
+  final String? helpPosition;
+  @JsonKey(name: 'max_char_limit')
+  final int? maxCharLimit;
+  final int? maxLength;
+  @JsonKey(name: 'date_type')
+  final String? dateType;
 
-  FormFieldDto({this.id, this.type, this.name, this.hidden, this.logic});
+  @JsonKey(ignore: true)
+  ConditionTree? conditionTree;
+
+  FormFieldDto({
+    this.id,
+    required this.hidden,
+    required this.required,
+    required this.disabled,
+    this.type,
+    this.name,
+    this.logic,
+    this.select,
+    this.multiSelect,
+    this.helpPosition,
+    this.maxCharLimit,
+    this.maxLength,
+    this.dateType,
+    this.conditionTree,
+  }) {
+    if (logic != null && logic!.actions != null && logic!.actions!.isNotEmpty && logic!.conditions != null) {
+      conditionTree = ConditionTree(
+        action: ConditionActions.fromJson(logic!.actions![0]),
+        node: ConditionNode.buildTree(logic!.conditions!),
+      );
+    }
+  }
 
   factory FormFieldDto.fromJson(Map<String, dynamic> json) => _$FormFieldDtoFromJson(json);
   Map<String, dynamic> toJson() => _$FormFieldDtoToJson(this);
@@ -83,8 +124,10 @@ class Option {
   final String? id;
   @JsonKey(name: 'is_correct_answer')
   final bool? isCorrectAnswer;
+  @JsonKey(name: 'is_flag')
+  final bool? isFlag;
 
-  Option({this.name, this.id, this.isCorrectAnswer});
+  Option({this.name, this.id, this.isCorrectAnswer, this.isFlag});
 
   factory Option.fromJson(Map<String, dynamic> json) => _$OptionFromJson(json);
   Map<String, dynamic> toJson() => _$OptionToJson(this);

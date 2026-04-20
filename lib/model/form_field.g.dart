@@ -8,12 +8,24 @@ part of 'form_field.dart';
 
 FormFieldDto _$FormFieldDtoFromJson(Map<String, dynamic> json) => FormFieldDto(
   id: json['id'] as String?,
+  hidden: json['hidden'] as bool? ?? false,
+  required: json['required'] as bool? ?? false,
+  disabled: json['disabled'] as bool? ?? false,
   type: json['type'] as String?,
   name: json['name'] as String?,
-  hidden: json['hidden'] as bool?,
   logic: json['logic'] == null
       ? null
       : Logic.fromJson(json['logic'] as Map<String, dynamic>),
+  select: json['select'] == null
+      ? null
+      : SelectConfig.fromJson(json['select'] as Map<String, dynamic>),
+  multiSelect: json['multi_select'] == null
+      ? null
+      : SelectConfig.fromJson(json['multi_select'] as Map<String, dynamic>),
+  helpPosition: json['help_position'] as String?,
+  maxCharLimit: (json['max_char_limit'] as num?)?.toInt(),
+  maxLength: (json['maxLength'] as num?)?.toInt(),
+  dateType: json['date_type'] as String?,
 );
 
 Map<String, dynamic> _$FormFieldDtoToJson(FormFieldDto instance) =>
@@ -22,7 +34,15 @@ Map<String, dynamic> _$FormFieldDtoToJson(FormFieldDto instance) =>
       'type': instance.type,
       'name': instance.name,
       'hidden': instance.hidden,
+      'disabled': instance.disabled,
+      'required': instance.required,
       'logic': instance.logic?.toJson(),
+      'select': instance.select?.toJson(),
+      'multi_select': instance.multiSelect?.toJson(),
+      'help_position': instance.helpPosition,
+      'max_char_limit': instance.maxCharLimit,
+      'maxLength': instance.maxLength,
+      'date_type': instance.dateType,
     };
 
 Logic _$LogicFromJson(Map<String, dynamic> json) => Logic(
@@ -103,10 +123,12 @@ Option _$OptionFromJson(Map<String, dynamic> json) => Option(
   name: json['name'] as String?,
   id: json['id'] as String?,
   isCorrectAnswer: json['is_correct_answer'] as bool?,
+  isFlag: json['is_flag'] as bool?,
 );
 
 Map<String, dynamic> _$OptionToJson(Option instance) => <String, dynamic>{
   'name': instance.name,
   'id': instance.id,
   'is_correct_answer': instance.isCorrectAnswer,
+  'is_flag': instance.isFlag,
 };

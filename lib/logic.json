@@ -1,0 +1,180 @@
+[
+  {
+    "type": "text",
+    "name": "Your name",
+    "id": "b12d8eb9-48e8-4817-a8cf-c95e479ed35a",
+    "hidden": false,
+    "help_position": "below_input",
+    "width": "full",
+    "align": "left",
+    "show_char_limit": false,
+    "src": false,
+    "max_char_limit": 2000,
+    "priority": "LOW",
+    "sectionIndex": 0,
+    "date_type": "date_only",
+    "disabled_dates": "allow_all_dates",
+    "logic": {
+      "conditions": {
+        "id": "27b1ab30-59e7-47cd-a703-cdebb76e93e7",
+        "operatorIdentifier": "and",
+        "children": [
+          {
+            "id": "bd90ee7a-17db-4570-9ba6-1cb2897f4304",
+            "identifier": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+            "value": {
+              "operator": "equals",
+              "property_meta": {
+                "id": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+                "type": "select",
+                "name": "Select"
+              },
+              "value": "s1"
+            }
+          },
+          {
+            "id": "305937cc-1b8f-474a-b509-5f648bec66ab",
+            "identifier": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+            "value": {
+              "operator": "equals",
+              "property_meta": {
+                "id": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+                "type": "select",
+                "name": "Select"
+              },
+              "value": "s2"
+            }
+          }
+        ]
+      },
+      "actions": [
+        "disable-block"
+      ]
+    },
+    "required": true
+  },
+  {
+    "type": "date",
+    "name": "Date",
+    "id": "c8036494-e3a1-48fe-b074-1656a7c10841",
+    "hidden": false,
+    "help_position": "below_input",
+    "width": "full",
+    "align": "left",
+    "priority": "LOW"
+  },
+  {
+    "type": "text",
+    "name": "Your name",
+    "id": "34fb6c3f-e80c-4605-bbd6-feaf6b367ff9",
+    "hidden": false,
+    "help_position": "below_input",
+    "width": "full",
+    "align": "left",
+    "show_char_limit": false,
+    "src": false,
+    "max_char_limit": 2000,
+    "priority": "LOW",
+    "sectionIndex": 2,
+    "date_type": "date_only",
+    "disabled_dates": "allow_all_dates",
+    "logic": {
+      "conditions": {
+        "id": "3d751ec0-5fe5-4425-8875-8a6f1f74fbbc",
+        "operatorIdentifier": "and",
+        "children": [
+          {
+            "id": "558b125d-c60e-4bba-a860-8f7694a7a7da",
+            "identifier": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+            "value": {
+              "operator": "equals",
+              "property_meta": {
+                "id": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+                "type": "select",
+                "name": "Select"
+              },
+              "value": "s2"
+            }
+          },
+          {
+            "id": "454da65b-1fd1-4915-b0d7-b831203982bb",
+            "operatorIdentifier": "and",
+            "children": [
+              {
+                "id": "223627d6-cb70-4659-a474-2255dafed826",
+                "identifier": "b2af5b8d-ef9a-462b-a259-b8b140db9a18",
+                "value": {
+                  "operator": "equals",
+                  "property_meta": {
+                    "id": "b2af5b8d-ef9a-462b-a259-b8b140db9a18",
+                    "type": "select",
+                    "name": "Select"
+                  },
+                  "value": "s11"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "require-answer"
+      ]
+    },
+    "disabled": true
+  },
+  {
+    "type": "select",
+    "name": "Select",
+    "id": "b1d67c04-0756-4a7e-b2f6-ebda423328b9",
+    "hidden": false,
+    "select": {
+      "options": [
+        {
+          "name": "s1",
+          "id": "s1",
+          "is_correct_answer": false,
+          "is_flag": false
+        },
+        {
+          "name": "s2",
+          "id": "s2",
+          "is_correct_answer": false,
+          "is_flag": false
+        }
+      ]
+    },
+    "help_position": "below_input",
+    "width": "full",
+    "align": "left",
+    "selectedOptionType": "custom",
+    "priority": "LOW"
+  },
+  {
+    "type": "select",
+    "name": "Select",
+    "id": "b2af5b8d-ef9a-462b-a259-b8b140db9a18",
+    "hidden": false,
+    "select": {
+      "options": [
+        {
+          "name": "s11",
+          "id": "s11",
+          "is_correct_answer": false,
+          "is_flag": false
+        },
+        {
+          "name": "s22",
+          "id": "s22",
+          "is_correct_answer": false,
+          "is_flag": false
+        }
+      ]
+    },
+    "help_position": "below_input",
+    "width": "full",
+    "align": "left",
+    "selectedOptionType": "custom",
+    "priority": "LOW"
+  }
+]
