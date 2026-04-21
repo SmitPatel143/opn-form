@@ -19,39 +19,48 @@ class DynamicForm extends StatelessWidget {
   Widget build(BuildContext context) {
     List<FormFieldDto> formField = [];
 
-    try{
+    try {
       formField = formJson.map((e) {
         return FormFieldDto.fromJson(e);
-      },).toList();
-    } catch (e, stack){
+      }).toList();
+    } catch (e, stack) {
       debugPrint("Form parsing error: $e");
       debugPrint("$stack");
     }
-    return FieldWrapper(field: formField,);
+    return FieldWrapper(field: formField);
   }
 }
 
-class FieldWrapper extends StatelessWidget {
+class FieldWrapper extends StatefulWidget {
   final List<FormFieldDto> field;
   const FieldWrapper({super.key, required this.field});
 
   @override
+  State<FieldWrapper> createState() => _FieldWrapperState();
+}
+
+class _FieldWrapperState extends State<FieldWrapper> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: field.length,
-      itemBuilder: (context, index) {
-        final item = field[index];
-        return Card(
-          elevation: 2,
-          margin: const EdgeInsets.all(8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _buildField(item),
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            children: widget.field.map((item) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: _buildField(item),
+              );
+            }).toList(),
           ),
-        );
-      },
+        ),
+      ),
     );
-    }
+  }
 
   Widget _buildField(FormFieldDto field) {
     switch (field.type) {
