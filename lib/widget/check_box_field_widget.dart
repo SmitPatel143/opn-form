@@ -14,21 +14,27 @@ class CheckBoxFieldWidget extends BaseFormFieldWidget {
     required bool isDisabled,
     required bool isHidden,
   }) {
-    final value = ref.watch(
+    final bool? value = ref.read(
       formDataProvider.select((value) {
         return value[field.id];
       }),
     );
-    debugPrint("build method invoked of checkbox");
-    return CheckboxListTile(
-      title: Text(field.name ?? ''),
-      value: value ?? false,
-      onChanged: isDisabled
-          ? null
-          : (value) {
-              debugPrint("check box value in function: $value");
-              ref.read(formDataProvider.notifier).updateValue(field.id!, value);
-            },
+    return FormField<bool?>(
+      initialValue: value,
+      builder: (checkBoxState) {
+        return CheckboxListTile(
+          title: Text(field.name ?? ''),
+          value: checkBoxState.value ?? false,
+          onChanged: isDisabled
+              ? null
+              : (val) {
+                  checkBoxState.didChange(val);
+                  ref
+                      .read(formDataProvider.notifier)
+                      .updateValue(field.id!, val);
+                },
+        );
+      },
     );
   }
 }

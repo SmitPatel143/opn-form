@@ -7,34 +7,32 @@ class SelectFieldWidget extends BaseFormFieldWidget {
   const SelectFieldWidget({super.key, required super.field});
 
   @override
-  Widget buildField(BuildContext context, WidgetRef ref,
-      {required bool isRequired,
-      required bool isDisabled,
-      required bool isHidden}) {
+  Widget buildField(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isRequired,
+    required bool isDisabled,
+    required bool isHidden,
+  }) {
     final value = ref.read(formDataProvider)[field.id!];
 
     final options = field.select?.options ?? [];
 
     return DropdownButtonFormField<String>(
-      value: value,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      initialValue: value,
       items: options
           .map(
-            (opt) => DropdownMenuItem(
-          value: opt.id,
-          child: Text(opt.name ?? ''),
-        ),
-      )
+            (opt) =>
+                DropdownMenuItem(value: opt.id, child: Text(opt.name ?? '')),
+          )
           .toList(),
       onChanged: isDisabled
           ? null
           : (val) {
-        ref
-            .read(formDataProvider.notifier)
-            .updateValue(field.id!, val);
-      },
-      decoration: InputDecoration(
-        labelText: field.name,
-      ),
+              ref.read(formDataProvider.notifier).updateValue(field.id!, val);
+            },
+      decoration: InputDecoration(labelText: field.name),
       validator: (val) {
         if (isRequired && (val == null || val.isEmpty)) {
           return "This field is required";

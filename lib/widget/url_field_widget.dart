@@ -7,30 +7,31 @@ class UrlFieldWidget extends BaseFormFieldWidget {
   const UrlFieldWidget({super.key, required super.field});
 
   @override
-  Widget buildField(BuildContext context, WidgetRef ref,
-      {required bool isRequired,
-      required bool isDisabled,
-      required bool isHidden}) {
+  Widget buildField(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isRequired,
+    required bool isDisabled,
+    required bool isHidden,
+  }) {
     final value = ref.read(formDataProvider)[field.id!];
 
     return TextFormField(
-      initialValue: value as String?,
+      initialValue: value,
       enabled: !isDisabled,
       keyboardType: TextInputType.url,
       decoration: InputDecoration(
         labelText: field.name,
         prefixIcon: const Icon(Icons.link),
       ),
-      validator: (val) {
-        if (isRequired && (val == null || val.isEmpty)) {
+      validator: (value) {
+        if (isRequired && (value == null || value.isEmpty)) {
           return "This field is required";
         }
         return null;
       },
       onChanged: (val) {
-        ref
-            .read(formDataProvider.notifier)
-            .updateValue(field.id!, val);
+        ref.read(formDataProvider.notifier).updateValue(field.id!, val);
       },
     );
   }

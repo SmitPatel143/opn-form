@@ -14,7 +14,7 @@ class MultiSelectFieldWidget extends BaseFormFieldWidget {
     required bool isDisabled,
     required bool isHidden,
   }) {
-    final List<String?>? selectedValues = ref.watch(
+    final List<String?>? selectedValues = ref.read(
       formDataProvider.select((value) {
         return value[field.id];
       }),
@@ -32,35 +32,52 @@ class MultiSelectFieldWidget extends BaseFormFieldWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
-        Wrap(
-          spacing: 8,
-          children: options.map((opt) {
-            final isSelected = selectedValues?.contains(opt.id) ?? false;
+        FormField<List<String?>>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          initialValue: selectedValues,
+          validator: (value) {
+            if (isRequired && (value == null || value.isEmpty)) {
+              return "This field is required";
+            }
+            return null;
+          },
+          builder: (multiSelectFieldState) {
+            final currentValues = multiSelectFieldState.value ?? [];
 
-            return FilterChip(
-              label: Text(opt.name ?? ''),
-              selected: isSelected,
-              onSelected: isDisabled
-                  ? null
-                  : (selected) {
-                      if (selected) {
-                        ref.read(formDataProvider.notifier).updateValue(
-                          field.id!,
-                          [...?selectedValues, opt.id],
-                        );
-                      } else {
-                        ref
-                            .read(formDataProvider.notifier)
-                            .updateValue(
-                              field.id!,
-                              selectedValues
-                                  ?.where((v) => v != opt.id)
-                                  .toList(),
-                            );
-                      }
-                    },
+            void updateValues(List<String?> updated) {
+              multiSelectFieldState.didChange(updated);
+
+              if (updated.isEmpty) {
+                ref.read(formDataProvider.notifier).removeValue(field.id!);
+              } else {
+                ref
+                    .read(formDataProvider.notifier)
+                    .updateValue(field.id!, updated);
+              }
+            }
+
+            return Wrap(
+              spacing: 8,
+              children: options.map((opt) {
+                final isSelected =
+                    multiSelectFieldState.value?.contains(opt.id) ?? false;
+
+                return FilterChip(
+                  label: Text(opt.name ?? ''),
+                  selected: isSelected,
+                  onSelected: isDisabled
+                      ? null
+                      : (selected) {
+                          final updated = isSelected
+                              ? currentValues.where((v) => v != opt.id).toList()
+                              : [...currentValues, opt.id];
+
+                          updateValues(updated);
+                        },
+                );
+              }).toList(),
             );
-          }).toList(),
+          },
         ),
       ],
     );

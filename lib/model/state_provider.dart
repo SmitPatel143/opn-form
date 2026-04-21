@@ -16,4 +16,10 @@ final class FormDataNotifier extends AutoDisposeNotifier<Map<String, dynamic>> {
     updatedMap[fieldId] = value;
     state = updatedMap;
   }
+
+  void removeValue(String fieldId) {
+    final updatedMap = Map<String, dynamic>.from(state);
+    updatedMap.remove(fieldId);
+    state = updatedMap;
+  }
 }

@@ -50,16 +50,42 @@ class _FieldWrapperState extends State<FieldWrapper> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
-            children: widget.field.map((item) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: _buildField(item),
-              );
-            }).toList(),
+            children: [
+              ...widget.field.map((item) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: _buildField(item),
+                );
+              }),
+              const SizedBox(height: 20),
+
+              // 🔽 Submit Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onSubmit,
+                  child: const Text("Submit"),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
+
+
+  }
+  void _onSubmit() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (isValid) {
+      _formKey.currentState?.save();
+      print("✅ Form is valid");
+
+      // Do API call / next step
+    } else {
+      print("❌ Form is invalid");
+    }
   }
 
   Widget _buildField(FormFieldDto field) {
