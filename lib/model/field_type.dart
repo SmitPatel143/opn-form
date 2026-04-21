@@ -49,6 +49,18 @@ final class StringFieldOperator extends FieldOperator {
         return input == null || input.isEmpty;
       case StringOperator.isNotEmpty:
         return input != null && input.isNotEmpty;
+      case StringOperator.contentLengthEquals:
+        return input?.length == value;
+      case StringOperator.contentLengthDoesNotEqual:
+        return input?.length != value;
+      case StringOperator.contentLengthGreaterThan:
+        return input?.length == null || (input ?? "").length > value;
+      case StringOperator.contentLengthGreaterThanOrEqualTo:
+        return input?.length == null || (input ?? "").length >= value;
+      case StringOperator.contentLengthLessThan:
+        return input?.length == null || (input ?? "").length < value;
+      case StringOperator.contentLengthLessThanOrEqualTo:
+        return input?.length == null || (input ?? "").length <= value;
       case StringOperator.contains:
         return input?.contains(value) ?? false;
       case StringOperator.doesNotContains:
@@ -57,18 +69,6 @@ final class StringFieldOperator extends FieldOperator {
         return input?.startsWith(value) ?? false;
       case StringOperator.endsWith:
         return input?.endsWith(value) ?? false;
-      case StringOperator.contentLengthEquals:
-        return input?.length == value;
-      case StringOperator.contentLengthDoesNotEqual:
-        return input?.length != value;
-      case StringOperator.contentLengthLessThan:
-        return input?.length == null || (input ?? "").length < value;
-      case StringOperator.contentLengthLessThanOrEqualTo:
-        return input?.length == null || (input ?? "").length <= value;
-      case StringOperator.contentLengthGreaterThan:
-        return input?.length == null || (input ?? "").length > value;
-      case StringOperator.contentLengthGreaterThanOrEqualTo:
-        return input?.length == null || (input ?? "").length >= value;
     }
   }
 }
@@ -77,49 +77,42 @@ final class DateFieldOperator extends FieldOperator {
   final DateOperator operator;
   const DateFieldOperator(this.operator);
 
+  bool _isSameDay(DateTime? a, DateTime? b) {
+    if (a == null || b == null) return false;
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
   @override
   bool eval(dynamic input, dynamic value) {
-    final inputDate = DateTime.tryParse(input ?? '');
-    final compareDate = DateTime.tryParse(value);
+    final inputDate = DateTime.tryParse(input?.toString() ?? '');
+    final compareDate = DateTime.tryParse(value?.toString() ?? '');
     switch (operator) {
       case DateOperator.equals:
-        return inputDate == compareDate;
+        return _isSameDay(inputDate, compareDate);
       case DateOperator.doesNotEqual:
-        return inputDate != compareDate;
+        return !_isSameDay(inputDate, compareDate);
       case DateOperator.isEmpty:
-        return inputDate == null || inputDate.toString().isEmpty;
+        return inputDate == null;
       case DateOperator.isNotEmpty:
-        return inputDate != null && inputDate.toString().isNotEmpty;
+        return inputDate != null;
       case DateOperator.before:
-        return input != null &&
+        return inputDate != null &&
             compareDate != null &&
-            inputDate!.isBefore(compareDate);
+            inputDate.isBefore(compareDate);
       case DateOperator.after:
-        return input != null &&
+        return inputDate != null &&
             compareDate != null &&
-            inputDate!.isAfter(compareDate);
+            inputDate.isAfter(compareDate);
       case DateOperator.onOrBefore:
         return inputDate != null &&
             compareDate != null &&
-            (inputDate.isBefore(compareDate) || inputDate == compareDate);
-      case DateOperator.nextMonth:
-        if (inputDate == null) return false;
-        final now = DateTime.now();
-
-        final nextMonth = now.month == 12 ? 1 : now.month + 1;
-        final nextMonthYear = (now.month == 12) ? now.year + 1 : now.year;
-
-        return inputDate.month == nextMonth && inputDate.year == nextMonthYear;
-      case DateOperator.nextWeek:
-        if (inputDate == null) return false;
-        final now = DateTime.now();
-        final nextWeek = now.add(const Duration(days: 7));
-        return inputDate.isAfter(now) && inputDate.isBefore(nextWeek);
-      case DateOperator.nextYear:
-        if (inputDate == null) return false;
-        final now = DateTime.now();
-        final nextYear = now.year + 1;
-        return inputDate.year == nextYear;
+            (inputDate.isBefore(compareDate) ||
+                _isSameDay(inputDate, compareDate));
+      case DateOperator.onOrAfter:
+        return inputDate != null &&
+            compareDate != null &&
+            (inputDate.isAfter(compareDate) ||
+                _isSameDay(inputDate, compareDate));
       case DateOperator.pastWeek:
         if (inputDate == null) return false;
         final now = DateTime.now();
@@ -136,10 +129,22 @@ final class DateFieldOperator extends FieldOperator {
         final now = DateTime.now();
         final pastYear = now.year - 1;
         return inputDate.year == pastYear;
-      case DateOperator.onOrAfter:
-        return inputDate != null &&
-            compareDate != null &&
-            (inputDate.isAfter(compareDate) || inputDate == compareDate);
+      case DateOperator.nextWeek:
+        if (inputDate == null) return false;
+        final now = DateTime.now();
+        final nextWeek = now.add(const Duration(days: 7));
+        return inputDate.isAfter(now) && inputDate.isBefore(nextWeek);
+      case DateOperator.nextMonth:
+        if (inputDate == null) return false;
+        final now = DateTime.now();
+        final nextMonth = now.month == 12 ? 1 : now.month + 1;
+        final nextMonthYear = (now.month == 12) ? now.year + 1 : now.year;
+        return inputDate.month == nextMonth && inputDate.year == nextMonthYear;
+      case DateOperator.nextYear:
+        if (inputDate == null) return false;
+        final now = DateTime.now();
+        final nextYear = now.year + 1;
+        return inputDate.year == nextYear;
     }
   }
 }
@@ -185,10 +190,10 @@ final class MultiSelectFieldOperator extends FieldOperator {
   @override
   bool eval(dynamic input, dynamic value) {
     switch (operator) {
-      case MultiSelectOperator.equals:
-        return input == value;
-      case MultiSelectOperator.doesNotEqual:
-        return input != value;
+      case MultiSelectOperator.isEmpty:
+        return input == null || input.isEmpty;
+      case MultiSelectOperator.isNotEmpty:
+        return input != null && input.isNotEmpty;
       case MultiSelectOperator.contains:
         return input?.contains(value) ?? false;
       case MultiSelectOperator.doesNotContains:
@@ -203,26 +208,50 @@ final class NumberFieldOperator extends FieldOperator {
 
   @override
   bool eval(dynamic input, dynamic value) {
-    final num? numInput = input as num?;
+    final num? numInput = input is num
+        ? input
+        : num.tryParse(input?.toString() ?? '');
+    final num? compareValue = value is num
+        ? value
+        : num.tryParse(value?.toString() ?? '');
+
     switch (operator) {
       case NumberOperator.equals:
-        return numInput == value;
+        return numInput == compareValue;
       case NumberOperator.doesNotEqual:
-        return numInput != value;
+        return numInput != compareValue;
       case NumberOperator.greaterThan:
-        return numInput != null && numInput > value;
+        return numInput != null &&
+            compareValue != null &&
+            numInput > compareValue;
       case NumberOperator.greaterThanOrEqualTo:
-        return numInput != null && numInput >= value;
+        return numInput != null &&
+            compareValue != null &&
+            numInput >= compareValue;
       case NumberOperator.lessThan:
-        return numInput != null && numInput < value;
+        return numInput != null &&
+            compareValue != null &&
+            numInput < compareValue;
       case NumberOperator.lessThanOrEqualTo:
-        return numInput != null && numInput <= value;
+        return numInput != null &&
+            compareValue != null &&
+            numInput <= compareValue;
       case NumberOperator.isEmpty:
-        return numInput == null || numInput.toString().isEmpty;
+        return numInput == null;
       case NumberOperator.isNotEmpty:
         return numInput != null;
-      default:
-        return false;
+      case NumberOperator.contentLengthEquals:
+        return numInput?.toString().length == compareValue;
+      case NumberOperator.contentLengthDoesNotEqual:
+        return numInput?.toString().length != compareValue;
+      case NumberOperator.contentLengthGreaterThan:
+        return (numInput?.toString().length ?? 0) > (compareValue ?? 0);
+      case NumberOperator.contentLengthGreaterThanOrEqualTo:
+        return (numInput?.toString().length ?? 0) >= (compareValue ?? 0);
+      case NumberOperator.contentLengthLessThan:
+        return (numInput?.toString().length ?? 0) < (compareValue ?? 0);
+      case NumberOperator.contentLengthLessThanOrEqualTo:
+        return (numInput?.toString().length ?? 0) <= (compareValue ?? 0);
     }
   }
 }

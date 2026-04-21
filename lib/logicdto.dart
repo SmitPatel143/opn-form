@@ -237,6 +237,41 @@ final formJson = [
     "align": "left",
     "priority": "LOW",
     "maxLength": 10,
+    "logic": {
+      "conditions": {
+        "id": "513b3a0e-6984-4db7-9730-fc1085689c42",
+        "operatorIdentifier": "and",
+        "children": [
+          {
+            "id": "b4475c71-2ad3-4138-a910-3c3133de6c6f",
+            "identifier": "69b93838-898d-4c69-b82c-8a7dd397cb79",
+            "value": {
+              "operator": "equals",
+              "property_meta": {
+                "id": "69b93838-898d-4c69-b82c-8a7dd397cb79",
+                "type": "date",
+                "name": "Date",
+              },
+              "value": "2026-04-16",
+            },
+          },
+          {
+            "id": "30a55b71-fb0e-4e62-a3f3-c68fffd37ea5",
+            "identifier": "bde7bbdd-c8fc-43de-bacb-eb1a76d7a562",
+            "value": {
+              "operator": "does_not_contain",
+              "property_meta": {
+                "id": "bde7bbdd-c8fc-43de-bacb-eb1a76d7a562",
+                "type": "phone_number",
+                "name": "Phone Number",
+              },
+              "value": "12",
+            },
+          },
+        ],
+      },
+      "actions": ["disable-block"],
+    },
   },
   {
     "type": "email",

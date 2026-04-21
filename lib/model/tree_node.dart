@@ -60,6 +60,7 @@ enum StringOperator {
 
 enum DateOperator {
   equals(value: 'equals'),
+  doesNotEqual(value: 'does_not_equal'),
   isEmpty(value: 'is_empty'),
   isNotEmpty(value: 'is_not_empty'),
   before(value: 'before'),
@@ -71,9 +72,7 @@ enum DateOperator {
   pastYear(value: 'past_year'),
   nextWeek(value: 'next_week'),
   nextMonth(value: 'next_month'),
-  nextYear(value: 'next_year'),
-
-  doesNotEqual(value: 'does_not_equal');
+  nextYear(value: 'next_year');
 
   final String value;
 
@@ -101,8 +100,8 @@ enum SelectOperator {
 }
 
 enum MultiSelectOperator {
-  equals(value: 'equals'),
-  doesNotEqual(value: 'does_not_equal'),
+  isEmpty(value: 'is_empty'),
+  isNotEmpty(value: 'is_not_empty'),
   contains(value: 'contains'),
   doesNotContains(value: 'does_not_contain');
 

@@ -12,8 +12,10 @@ class DateFieldWidget extends BaseFormFieldWidget {
       required bool isDisabled,
       required bool isHidden}) {
     debugPrint("date field widget rebuild");
-    final value = ref.read(
-      formDataProvider)[field.id!];
+    final value = ref.watch(
+      formDataProvider.select((value) {
+        return value[field.id!];
+      },));
 
     return ListTile(
       title: Text(field.name ?? 'Date'),

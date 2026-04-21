@@ -287,21 +287,6 @@ void main() {
   // 5. MULTI-SELECT FIELD OPERATOR
   // ──────────────────────────────────────────────────────────────────────────
   group('MultiSelectFieldOperator', () {
-    test('equals — order-sensitive list comparison', () {
-      const op = MultiSelectFieldOperator(MultiSelectOperator.equals);
-      expect(op.eval(['a', 'b'], ['a', 'b']), isTrue);
-      expect(op.eval(['a', 'b'], ['b', 'a']), isFalse); // order matters
-      expect(op.eval(['a'], ['a', 'b']), isFalse); // length differs
-      expect(op.eval(null, null), isTrue);
-      expect(op.eval(['a'], null), isFalse);
-    });
-
-    test('doesNotEqual', () {
-      const op = MultiSelectFieldOperator(MultiSelectOperator.doesNotEqual);
-      expect(op.eval(['a'], ['b']), isTrue);
-      expect(op.eval(['a', 'b'], ['a', 'b']), isFalse);
-    });
-
     test('contains — input list contains the value', () {
       const op = MultiSelectFieldOperator(MultiSelectOperator.contains);
       expect(op.eval(['a', 'b', 'c'], 'b'), isTrue);
@@ -314,12 +299,6 @@ void main() {
       expect(op.eval(['a', 'b'], 'z'), isTrue);
       expect(op.eval(['a', 'b'], 'a'), isFalse);
       expect(op.eval(null, 'a'), isFalse); // null → contains returns true via ?? true → negated
-    });
-
-    test('isEmpty / isNotEmpty via equals with empty list', () {
-      const opEq = MultiSelectFieldOperator(MultiSelectOperator.equals);
-      // Empty vs empty
-      expect(opEq.eval([], []), isTrue);
     });
   });
 

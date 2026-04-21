@@ -7,11 +7,18 @@ class MultiSelectFieldWidget extends BaseFormFieldWidget {
   const MultiSelectFieldWidget({super.key, required super.field});
 
   @override
-  Widget buildField(BuildContext context, WidgetRef ref,
-      {required bool isRequired,
-      required bool isDisabled,
-      required bool isHidden}) {
-    final selectedValues = ref.read(formDataProvider)[field.id!];
+  Widget buildField(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isRequired,
+    required bool isDisabled,
+    required bool isHidden,
+  }) {
+    final List<String?>? selectedValues = ref.watch(
+      formDataProvider.select((value) {
+        return value[field.id];
+      }),
+    );
 
     final options = field.multiSelect?.options ?? [];
 
@@ -39,14 +46,16 @@ class MultiSelectFieldWidget extends BaseFormFieldWidget {
                       if (selected) {
                         ref.read(formDataProvider.notifier).updateValue(
                           field.id!,
-                          [...selectedValues, opt.id],
+                          [...?selectedValues, opt.id],
                         );
                       } else {
                         ref
                             .read(formDataProvider.notifier)
                             .updateValue(
                               field.id!,
-                              selectedValues.where((v) => v != opt.id).toList(),
+                              selectedValues
+                                  ?.where((v) => v != opt.id)
+                                  .toList(),
                             );
                       }
                     },
