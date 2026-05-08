@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../field_widgets.dart';
-import 'package:opn_form/model/state_provider.dart';
+import '../../state/form/field_widgets.dart';
+import 'package:opn_form/model/form/state_provider.dart';
 
 class MultiSelectFieldWidget extends BaseFormFieldWidget {
   const MultiSelectFieldWidget({super.key, required super.field});
@@ -24,8 +24,10 @@ class MultiSelectFieldWidget extends BaseFormFieldWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
+        Container(
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
             field.name ?? '',

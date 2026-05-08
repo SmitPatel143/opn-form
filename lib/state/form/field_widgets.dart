@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:opn_form/model/form_field.dart';
-import 'package:opn_form/model/state_provider.dart';
-import 'package:opn_form/model/tree_node.dart';
+import 'package:opn_form/model/form/form_field.dart';
+import 'package:opn_form/model/form/state_provider.dart';
+import 'package:opn_form/model/form/tree_node.dart';
 
 abstract class BaseFormFieldWidget extends ConsumerWidget {
   final FormFieldDto field;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:opn_form/model/state_provider.dart';
-import '../field_widgets.dart';
+import '../../state/form/field_widgets.dart';
+import 'package:opn_form/model/form/state_provider.dart';
 
-class EmailFieldWidget extends BaseFormFieldWidget {
-  const EmailFieldWidget({super.key, required super.field});
+class TextFieldWidget extends BaseFormFieldWidget {
+  const TextFieldWidget({super.key, required super.field});
 
   @override
   Widget buildField(BuildContext context, WidgetRef ref,
@@ -18,19 +18,22 @@ class EmailFieldWidget extends BaseFormFieldWidget {
     return TextFormField(
       initialValue: value as String?,
       enabled: !isDisabled,
-      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: field.name,
-        prefixIcon: const Icon(Icons.email),
+        helperText: field.helpPosition == 'below_input'
+            ? 'Help for ${field.name}'
+            : null,
       ),
       validator: (val) {
         if (isRequired && (val == null || val.isEmpty)) {
-          return "This field is required";
+          return "Field is required";
         }
         return null;
       },
       onChanged: (val) {
-        ref.read(formDataProvider.notifier).updateValue(field.id!, val);
+        ref
+            .read(formDataProvider.notifier)
+            .updateValue(field.id!, val);
       },
     );
   }

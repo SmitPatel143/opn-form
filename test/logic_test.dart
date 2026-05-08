@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:opn_form/model/field_type.dart';
-import 'package:opn_form/model/form_field.dart';
-import 'package:opn_form/model/tree_node.dart';
+import 'package:opn_form/model/form/field_type.dart';
+import 'package:opn_form/model/form/form_field.dart';
+import 'package:opn_form/model/form/tree_node.dart';
 
 void main() {
   // ──────────────────────────────────────────────────────────────────────────
@@ -534,7 +534,6 @@ void main() {
   group('ConditionNode.buildTree', () {
     test('single leaf condition builds correctly', () {
       final condition = Condition(
-        id: 'leaf1',
         identifier: 'field_name',
         value: ConditionValue(
           operator: 'equals',
@@ -553,11 +552,9 @@ void main() {
 
     test('AND group evaluates — all children must be true', () {
       final condition = Condition(
-        id: 'group1',
         operatorIdentifier: 'and',
         children: [
           Condition(
-            id: 'leaf1',
             identifier: 'field_a',
             value: ConditionValue(
               operator: 'equals',
@@ -566,7 +563,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'leaf2',
             identifier: 'field_b',
             value: ConditionValue(
               operator: 'equals',
@@ -591,11 +587,9 @@ void main() {
 
     test('OR group evaluates — any child true is enough', () {
       final condition = Condition(
-        id: 'group1',
         operatorIdentifier: 'or',
         children: [
           Condition(
-            id: 'leaf1',
             identifier: 'field_a',
             value: ConditionValue(
               operator: 'equals',
@@ -604,7 +598,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'leaf2',
             identifier: 'field_b',
             value: ConditionValue(
               operator: 'equals',
@@ -629,16 +622,13 @@ void main() {
 
     test('nested groups — AND inside OR', () {
       final condition = Condition(
-        id: 'root',
         operatorIdentifier: 'or',
         children: [
           // child 1: AND group
           Condition(
-            id: 'andGroup',
             operatorIdentifier: 'and',
             children: [
               Condition(
-                id: 'l1',
                 identifier: 'f1',
                 value: ConditionValue(
                   operator: 'equals',
@@ -647,7 +637,6 @@ void main() {
                 ),
               ),
               Condition(
-                id: 'l2',
                 identifier: 'f2',
                 value: ConditionValue(
                   operator: 'equals',
@@ -659,7 +648,6 @@ void main() {
           ),
           // child 2: single leaf
           Condition(
-            id: 'l3',
             identifier: 'f3',
             value: ConditionValue(
               operator: 'equals',
@@ -690,11 +678,9 @@ void main() {
   group('ConditionTree with mixed field types', () {
     test('tree with date + select + number fields', () {
       final condition = Condition(
-        id: 'root',
         operatorIdentifier: 'and',
         children: [
           Condition(
-            id: 'dateLeaf',
             identifier: 'date_field',
             value: ConditionValue(
               operator: 'is_not_empty',
@@ -703,7 +689,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'selectLeaf',
             identifier: 'status',
             value: ConditionValue(
               operator: 'equals',
@@ -712,7 +697,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'numLeaf',
             identifier: 'quantity',
             value: ConditionValue(
               operator: 'greater_than',
@@ -768,11 +752,9 @@ void main() {
 
     test('tree with files + multiSelect + checkbox', () {
       final condition = Condition(
-        id: 'root',
         operatorIdentifier: 'or',
         children: [
           Condition(
-            id: 'filesLeaf',
             identifier: 'attachments',
             value: ConditionValue(
               operator: 'is_not_empty',
@@ -781,7 +763,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'msLeaf',
             identifier: 'tags',
             value: ConditionValue(
               operator: 'contains',
@@ -790,7 +771,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'cbLeaf',
             identifier: 'agree',
             value: ConditionValue(
               operator: 'equals',
@@ -846,11 +826,9 @@ void main() {
 
     test('tree with url/email/phone string operators', () {
       final condition = Condition(
-        id: 'root',
         operatorIdentifier: 'and',
         children: [
           Condition(
-            id: 'urlLeaf',
             identifier: 'website',
             value: ConditionValue(
               operator: 'starts_with',
@@ -859,7 +837,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'emailLeaf',
             identifier: 'email',
             value: ConditionValue(
               operator: 'ends',
@@ -868,7 +845,6 @@ void main() {
             ),
           ),
           Condition(
-            id: 'phoneLeaf',
             identifier: 'phone',
             value: ConditionValue(
               operator: 'is_not_empty',
@@ -938,11 +914,9 @@ void main() {
         logic: Logic(
           actions: ['hide-block'],
           conditions: Condition(
-            id: 'root',
             operatorIdentifier: 'and',
             children: [
               Condition(
-                id: 'c1',
                 identifier: 'source_field',
                 value: ConditionValue(
                   operator: 'equals',
@@ -986,7 +960,6 @@ void main() {
         logic: Logic(
           actions: ['require-answer'],
           conditions: Condition(
-            id: 'c1',
             identifier: 'checkbox_field',
             value: ConditionValue(
               operator: 'equals',
@@ -1013,7 +986,6 @@ void main() {
         logic: Logic(
           actions: ['disable-block'],
           conditions: Condition(
-            id: 'c1',
             identifier: 'num_field',
             value: ConditionValue(
               operator: 'less_than',
@@ -1042,7 +1014,6 @@ void main() {
   group('Edge cases', () {
     test('ConditionLeaf.evaluate with missing formData key returns false for equals', () {
       final leaf = ConditionLeaf(
-        id: 'l1',
         fieldId: 'missing_key',
         fieldType: FieldType.text,
         operator: const StringFieldOperator(StringOperator.equals),
@@ -1054,7 +1025,6 @@ void main() {
 
     test('evaluateNode with formData missing the key', () {
       final condition = Condition(
-        id: 'c1',
         identifier: 'field_x',
         value: ConditionValue(
           operator: 'is_empty',
@@ -1080,15 +1050,12 @@ void main() {
 
     test('deeply nested 3-level tree', () {
       final condition = Condition(
-        id: 'root',
         operatorIdentifier: 'and',
         children: [
           Condition(
-            id: 'or1',
             operatorIdentifier: 'or',
             children: [
               Condition(
-                id: 'l1',
                 identifier: 'a',
                 value: ConditionValue(
                   operator: 'equals',
@@ -1097,7 +1064,6 @@ void main() {
                 ),
               ),
               Condition(
-                id: 'l2',
                 identifier: 'b',
                 value: ConditionValue(
                   operator: 'equals',
@@ -1108,11 +1074,9 @@ void main() {
             ],
           ),
           Condition(
-            id: 'or2',
             operatorIdentifier: 'or',
             children: [
               Condition(
-                id: 'l3',
                 identifier: 'c',
                 value: ConditionValue(
                   operator: 'equals',
@@ -1121,7 +1085,6 @@ void main() {
                 ),
               ),
               Condition(
-                id: 'l4',
                 identifier: 'd',
                 value: ConditionValue(
                   operator: 'equals',

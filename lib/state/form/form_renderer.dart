@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:opn_form/logicdto.dart';
-import 'package:opn_form/model/form_field.dart';
-import 'package:opn_form/widget/check_box_field_widget.dart';
-import 'package:opn_form/widget/date_field_widget.dart';
-import 'package:opn_form/widget/email_field_widget.dart';
-import 'package:opn_form/widget/files_field_widget.dart';
-import 'package:opn_form/widget/multi_select_field_widget.dart';
-import 'package:opn_form/widget/number_field_widget.dart';
-import 'package:opn_form/widget/phone_field_widget.dart';
-import 'package:opn_form/widget/select_field_widget.dart';
-import 'package:opn_form/widget/text_field_widget.dart';
-import 'package:opn_form/widget/url_field_widget.dart';
+import 'package:opn_form/state/form/logicdto.dart';
+import 'package:opn_form/model/form/form_field.dart';
+import 'package:opn_form/widget/form/check_box_field_widget.dart';
+import 'package:opn_form/widget/form/date_field_widget.dart';
+import 'package:opn_form/widget/form/email_field_widget.dart';
+import 'package:opn_form/widget/form/files_field_widget.dart';
+import 'package:opn_form/widget/form/multi_select_field_widget.dart';
+import 'package:opn_form/widget/form/number_field_widget.dart';
+import 'package:opn_form/widget/form/phone_field_widget.dart';
+import 'package:opn_form/widget/form/select_field_widget.dart';
+import 'package:opn_form/widget/form/text_field_widget.dart';
+import 'package:opn_form/widget/form/url_field_widget.dart';
 
 class DynamicForm extends StatelessWidget {
   const DynamicForm({super.key});
@@ -47,7 +47,8 @@ class _FieldWrapperState extends State<FieldWrapper> {
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
             children: [

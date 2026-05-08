@@ -1,4 +1,4 @@
-import 'package:opn_form/model/tree_node.dart';
+import 'package:opn_form/model/form/tree_node.dart';
 
 sealed class FieldOperator {
   const FieldOperator();

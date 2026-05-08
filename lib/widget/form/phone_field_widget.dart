@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../field_widgets.dart';
-import 'package:opn_form/model/state_provider.dart';
+import '../../state/form/field_widgets.dart';
+import 'package:opn_form/model/form/state_provider.dart';
 
 class PhoneFieldWidget extends BaseFormFieldWidget {
   const PhoneFieldWidget({super.key, required super.field});

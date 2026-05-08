@@ -60,7 +60,6 @@ Map<String, dynamic> _$LogicToJson(Logic instance) => <String, dynamic>{
 };
 
 Condition _$ConditionFromJson(Map<String, dynamic> json) => Condition(
-  id: json['id'] as String?,
   operatorIdentifier: json['operatorIdentifier'] as String?,
   children: (json['children'] as List<dynamic>?)
       ?.map((e) => Condition.fromJson(e as Map<String, dynamic>))
@@ -72,7 +71,6 @@ Condition _$ConditionFromJson(Map<String, dynamic> json) => Condition(
 );
 
 Map<String, dynamic> _$ConditionToJson(Condition instance) => <String, dynamic>{
-  'id': instance.id,
   'operatorIdentifier': instance.operatorIdentifier,
   'children': instance.children?.map((e) => e.toJson()).toList(),
   'identifier': instance.identifier,
